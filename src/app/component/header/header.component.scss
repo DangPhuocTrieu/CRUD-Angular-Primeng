@@ -1,0 +1,60 @@
+.header {
+    background-color: #0099FF;
+    padding: 20px 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__logo {
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        color: white;
+        cursor: pointer;
+    }
+
+    &__menu {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0 50px;
+    }
+
+    &__item {
+        position: relative;
+        padding-bottom: 5px;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 0;
+            background-color: white;
+            transition: 0.2s ease-in-out;
+        }
+
+        &:hover::before {
+            width: 100%;
+        }
+    }
+
+    &__link {
+        letter-spacing: 1px;
+        color: white;
+        font-size: 15px;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        color: white;
+        gap: 0 15px;
+
+        & > * {
+            font-size: 20px;
+            cursor: pointer;
+        }
+    }
+}

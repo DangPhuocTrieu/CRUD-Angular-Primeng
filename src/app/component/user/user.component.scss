@@ -1,0 +1,40 @@
+@import '../../scss/variables.scss';
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.user {
+    &__avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    &__actions {
+        height: 113px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0 10px;
+    
+        & > * {
+            padding: 7px 10px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+    
+        &-view {
+            background-color: $blue-color;
+        }
+    
+        &-edit {
+           background-color: orange; 
+        }
+    
+        &-remove {
+            background-color: red;
+        }
+    }
+}

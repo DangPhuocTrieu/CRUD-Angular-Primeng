@@ -1,0 +1,34 @@
+.menu {
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 0 15px 5px rgba(black, 0.05);
+
+    &__item {
+        padding: 20px 30px;
+        cursor: pointer;
+        transition: 0.2s linear;
+
+        &:hover {
+            background-color: #f7f3f3;
+        }
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        gap: 0 15px;
+        color: gray;
+
+        & >:first-child {
+            font-size: 18px;
+        }
+
+        & > span {
+            font-weight: 500;
+        }
+    }
+    
+}

@@ -1,0 +1,93 @@
+<div class="detail">
+    <h5 class="detail__heading">Edit User Info</h5>
+    <form class="detail__list box" [formGroup]="form" (ngSubmit)="handleSubmit(form)">
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>Full name</span>
+                <input type="text" placeholder="Fullname" formControlName="fullName">
+            </div>
+            <div class="detail__message" *ngIf="form.get('fullName')?.errors && form.get('fullName')?.touched">
+                <span *ngIf="form.get('fullName')?.errors?.['required']">Full name is required</span>
+            </div>
+        </div>
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>User name</span>
+                <input type="text" placeholder="Username" formControlName="userName">
+            </div>
+            <div class="detail__message" *ngIf="form.get('userName')?.errors && form.get('userName')?.touched">
+                <span *ngIf="form.get('userName')?.errors?.['required']">User name is required</span>
+                <span *ngIf="form.get('userName')?.errors?.['minlength']">User name must be larger than 5 characters.</span>
+            </div>
+        </div>
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>Age</span>
+                <input type="number" min="1" max="100" formControlName="age">
+            </div>
+        </div>
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>Gender</span>
+                <select formControlName="gender">
+                    <option value="Nam">Male</option>
+                    <option value="Nữ">Female</option>
+                </select>
+            </div>
+        </div>
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>Email</span>
+                <input type="email" placeholder="Email" formControlName="email">
+            </div>
+            <div class="detail__message" *ngIf="form.get('email')?.errors && form.get('email')?.touched">
+                <span *ngIf="form.get('email')?.errors?.['required']">Email is required</span>
+                <span *ngIf="form.get('email')?.errors?.['email']">Email invalidate</span>
+            </div>
+        </div>
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>Phone number</span>
+                <input type="text" placeholder="Phone number" formControlName="phoneNumber">
+            </div>
+            <div class="detail__message" *ngIf="form.get('phoneNumber')?.errors && form.get('phoneNumber')?.touched">
+                <span *ngIf="form.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+                <span *ngIf="form.get('phoneNumber')?.errors?.['pattern']">Phone invalidate</span>
+            </div>
+        </div>
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>Address</span>
+                <input type="text" class="Address" formControlName="address">
+            </div>
+            <div class="detail__message" *ngIf="form.get('address')?.errors && form.get('address')?.touched">
+                <span *ngIf="form.get('address')?.errors?.['required']">Address is required</span>
+                <span *ngIf="form.get('address')?.errors?.['minlength']">Address must be larger than 7 characters.</span>
+            </div>
+        </div>
+        <div class="detail__item">
+            <div class="detail__group">
+                <span>Avatar</span>
+                <label for="avatar">
+                    <ion-icon name="arrow-round-up"></ion-icon>
+                    <span>Chọn từ máy tính</span>
+                </label>
+                <input type="file" id="avatar" formControlName="avatar" (change)="handleChangeFile($event)">
+               <div class="detail__preview" *ngIf="previewURL">
+                    <img [src]="transformUrlAvatar(previewURL)">
+                    <ion-icon name="close-circle" (click)="handleRemoveImage()"></ion-icon>
+               </div>
+            </div>
+        </div>
+
+       <div class="detail__button">
+            <button type="button" class="detail__back" routerLink="/">Back</button>
+            <button type="submit" class="detail__submit" [class.create__disabled]="form.invalid">Update User</button>
+       </div>
+
+    </form>
+    <!-- <lib-toastify-toast-container></lib-toastify-toast-container> -->
+</div>
+
+
+ 
