@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import { Observable } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class UserService {
   private BASE_URL = 'http://localhost:8000/api/user'
   
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer, private messageService: MessageService) { }
 
   sanitizeImageUrl(imageUrl: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(imageUrl)
@@ -36,7 +37,11 @@ export class UserService {
     return this.http.put<User>(this.BASE_URL + '/edit/' + id, data)
   }
 
-  deleteUser(id: string): Observable<any> {
+  deleteUser(id: string | undefined): Observable<any> {
     return this.http.delete<any>(this.BASE_URL + '/delete/' + id)
+  }
+
+  displayMessage(summary: string, detail: string, severity: string = 'success') {
+    this.messageService.add({ severity, summary, detail })
   }
 }

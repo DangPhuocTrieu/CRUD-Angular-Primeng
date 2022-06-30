@@ -5,7 +5,6 @@ export interface User {
     age?: number,
     email?: string,
     phoneNumber?: string,
-    address?: string;
     gender?: string;
     avatar?: string;
 }

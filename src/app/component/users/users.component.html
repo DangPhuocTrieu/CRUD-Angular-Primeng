@@ -1,10 +1,10 @@
 <p-toast></p-toast>
 
 <div class="card">
-    <p-toolbar styleClass="mb-4">
+    <p-toolbar styleClass="my-4">
         <ng-template pTemplate="left">
             <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" ></button>
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedUsers()" [disabled]="!selectedUsers?.length"></button>
         </ng-template>
 
         <ng-template pTemplate="right">
@@ -13,7 +13,7 @@
         </ng-template>
     </p-toolbar>
     
-    <p-table #dt [value]="users">
+    <p-table #dt [value]="users" [(selection)]="selectedUsers">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h3 class="m-0">Manage Products</h3>
@@ -53,7 +53,7 @@
                 <td>{{user.gender}}</td>
                 <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editUser(user)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="handleDeleteUser(user._id)"></button>
                 </td>
             </tr>
         </ng-template>
@@ -67,7 +67,7 @@
 
 <p-dialog [(visible)]="userDialog" [style]="{width: '450px'}" header="User Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content" [formGroup]="form">
-        <img *ngIf="image" [src]="image" alt="Avatar" class="w-5rem h-5rem block mx-auto border-circle">
+        <img [src]="image ? image: avt_default" alt="Avatar" class="w-5rem h-5rem block mx-auto border-circle">
         <div class="field">
             <label for="fullname">Fullname</label>
             <input type="text" pInputText id="fullname" name="fullName" formControlName="fullName">
@@ -78,14 +78,26 @@
         <div class="field">
             <label for="username">Username</label>
             <input type="text" pInputText id="username" formControlName="userName">
+            <div *ngIf="form.get('userName')?.errors && form.get('userName')?.touched">
+                <small class="p-error" *ngIf="form.get('userName')?.errors?.['required']">User name is required</small>
+                <small class="p-error" *ngIf="form.get('userName')?.errors?.['minlength']">User name should be longer than five characters</small>
+            </div>
         </div>
         <div class="field">
             <label for="email">Email</label>
             <input type="text" pInputText id="email"  formControlName="email">
+            <div *ngIf="form.get('email')?.errors && form.get('email')?.touched">
+                <small class="p-error" *ngIf="form.get('email')?.errors?.['required']">Email is required</small>
+                <small class="p-error" *ngIf="form.get('email')?.errors?.['email']">Email is not valid</small>
+            </div>
         </div>
         <div class="field">
             <label for="phone">Phone number</label>
             <input type="text" pInputText id="phone" formControlName="phoneNumber">
+            <div *ngIf="form.get('phoneNumber')?.errors && form.get('phoneNumber')?.touched">
+                <small class="p-error" *ngIf="form.get('phoneNumber')?.errors?.['required']">Phone number is required</small>
+                <small class="p-error" *ngIf="form.get('phoneNumber')?.errors?.['pattern']">Phone number is not valid</small>
+            </div>
         </div>
         <div class="field">
             <label for="gender">Gender</label> 
@@ -94,15 +106,26 @@
                     <span>{{option.label}}</span>
                 </ng-template>
             </p-dropdown>
+            <div *ngIf="form.get('gender')?.errors && form.get('gender')?.touched">
+                <small class="p-error" *ngIf="form.get('gender')?.errors?.['required']">Gender is required</small>
+            </div>
         </div>
         <div class="field">
             <label for="age">Age</label>
-            <p-inputNumber id="age"  formControlName="age"></p-inputNumber>
+            <p-inputNumber id="age" formControlName="age" [min]="1" [max]="100" [allowEmpty]="false"></p-inputNumber>
+            <div *ngIf="form.get('age')?.errors && form.get('age')?.touched">
+                <small class="p-error" *ngIf="form.get('age')?.errors?.['required']">Age is required</small>
+            </div>
+        </div>
+        <div class="field">
+            <p-fileUpload (onSelect)="handleSelectImage($event)" mode="basic" accept="image/*" label="Upload image" chooseLabel="Upload image"></p-fileUpload>
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveUser()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveUser(form)"></button>
     </ng-template>
 </p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
