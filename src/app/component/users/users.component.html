@@ -19,7 +19,7 @@
                 <h3 class="m-0">Manage Products</h3>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" placeholder="Search...">
+                    <input pInputText type="text" placeholder="Search..." [(ngModel)]="searchInput" (input)="handleSearchChange($event)">
                 </span>
             </div>
         </ng-template>
@@ -57,6 +57,7 @@
                 </td>
             </tr>
         </ng-template>
+        
         <ng-template pTemplate="summary">
             <div class="flex align-items-center justify-content-between">
                 In total there are {{users?.length}} users

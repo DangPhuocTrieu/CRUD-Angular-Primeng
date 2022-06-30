@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputTextModule } from 'primeng/inputtext';
 import { StyleClassModule } from 'primeng/styleclass';
 import { TableModule } from 'primeng/table';
@@ -22,7 +23,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './component/header/header.component';
 import { MenuComponent } from './component/menu/menu.component';
 import { UsersComponent } from './component/users/users.component';
-;
+
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { UsersComponent } from './component/users/users.component';
     BrowserAnimationsModule,
     InputNumberModule,
     DropdownModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService, ConfirmationService],
   bootstrap: [AppComponent]

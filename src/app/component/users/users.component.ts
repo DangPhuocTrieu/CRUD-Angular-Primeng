@@ -1,7 +1,7 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { delay, from, mergeMap, Observer } from 'rxjs';
+import { concatMap, delay, from, mergeMap, Observer } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
 import { avatar_user_default } from '../../constants';
@@ -13,11 +13,13 @@ import { avatar_user_default } from '../../constants';
 })
 export class UsersComponent implements OnInit, AfterViewChecked {
   users!: User[]
+  usersTemp!: User[]
   selectedUsers!: User[]
+  searchInput!: string
   
   gender!: any[]
   image!: any
-  file!: File
+  file!: any
 
   avt_default = avatar_user_default
   loading = true
@@ -39,6 +41,7 @@ export class UsersComponent implements OnInit, AfterViewChecked {
       }
 
       this.userDialog = false
+      this.searchInput = ''
       this.getUsers()
     },
     error: ({ error }: any) => {
@@ -78,18 +81,11 @@ export class UsersComponent implements OnInit, AfterViewChecked {
     this.cd.detectChanges();
   }
 
-  // GET ALL USERS
-  getUsers() {
-    this.userService.getUsers().pipe(delay(500)).subscribe(data => {
-      this.users = data.users
-      this.loading = false
-    }) 
-  }
-
   // OPEN FORM CREATE USER
   openNew() {
     this.userDialog = true
     this.form.reset({ age: 20 })
+    this.file = null
     this.image = ''
   }
  
@@ -106,46 +102,75 @@ export class UsersComponent implements OnInit, AfterViewChecked {
     this.userDialog = false
   }
 
+  // CREATE FORM DATA
+  createFormData(file: File) {
+    const form = new FormData()
+    form.append('file', file)
+    form.append('upload_preset', 'instagramimages')
+
+    return form
+  }
+
+  // TRANSFORM IMAGE URL
+  handleTransformUrl(url: string) {
+    this.userService.sanitizeImageUrl(url)
+  }
+
+  // CHOOSE FILE IMAGE
+  handleSelectImage(event: any) {
+    this.file = event.files[0]
+    this.flag = true
+
+    let url = URL.createObjectURL(this.file)
+    this.image = this.userService.sanitizeImageUrl(url)
+  }
+
+  // GET ALL USERS
+  getUsers() {
+    this.userService.getUsers().pipe(delay(1000)).subscribe(({ users }) => {
+      this.users = users
+      this.usersTemp = users
+      this.loading = false
+    }) 
+  }
+
   // SUBMIT FORM
   saveUser(form: FormGroup) {
     form.markAllAsTouched()
     
     if(!form.valid) return
 
+    // EDIT USER
     if(form.value._id) {
        if(this.flag) {
-        const formData = new FormData()
-        formData.append('file', this.file)
-        formData.append('upload_preset', 'instagramimages')
+        const formData = this.createFormData(this.file)
 
-        this.userService.uploadImage(formData).subscribe(file => {
+        this.userService.uploadImage(formData).pipe(concatMap(file => (
           this.userService.editUser(form.value._id, {
             ...form.value,
             avatar: file.secure_url
-          }).subscribe(this.observer)
-        })
+          })
+        ))).subscribe(this.observer)
        }     
        else {
         this.userService.editUser(form.value._id, form.value).subscribe(this.observer)
        }     
     }
+
+    // CREATE USER
     else {
        if(this.file) {
-        const formData = new FormData()
-        formData.append('file', this.file)
-        formData.append('upload_preset', 'instagramimages')
+        console.log(this.file);
+        const formData = this.createFormData(this.file)
 
-         this.userService.uploadImage(formData).subscribe(file => {
-           console.log(file);
-           this.userService.addUser({
-             ...form.value,
-             avatar: file.secure_url
-           }).subscribe(this.observer)  
-         })
+         this.userService.uploadImage(formData).pipe(concatMap(file => (
+          this.userService.addUser({
+            ...form.value,
+            avatar: file.secure_url
+          })
+         ))).subscribe(this.observer)
        }
        else {
-         console.log(2);
-         
          this.userService.addUser(form.value).subscribe(this.observer)
        }
     }
@@ -164,31 +189,20 @@ export class UsersComponent implements OnInit, AfterViewChecked {
   }
 
   deleteSelectedUsers() {
-    console.log(this.selectedUsers);
-    
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete the selected users?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        from(this.selectedUsers).pipe(mergeMap((user) => (
+        from(this.selectedUsers).pipe(mergeMap(user => (
           this.userService.deleteUser(user._id)
         ))).subscribe(this.observer)
       }
     })
   }
 
-  // TRANSFORM IMAGE URL
-  handleTransformUrl(url: string) {
-    this.userService.sanitizeImageUrl(url)
-  }
-
-  // CHOOSE FILE IMAGE
-  handleSelectImage(event: any) {
-    this.file = event.files[0]
-    this.flag = true
-
-    let url = URL.createObjectURL(this.file)
-    this.image = this.userService.sanitizeImageUrl(url)
+  handleSearchChange(event: Event) {
+    let newUsers = this.usersTemp.filter(user => user.userName?.toLowerCase().includes(this.searchInput.toLowerCase()))
+    this.users = newUsers
   }
 }
