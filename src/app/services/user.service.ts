@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
-})
+}) 
 export class UserService {
   private BASE_URL = 'http://localhost:8000/api/user'
   

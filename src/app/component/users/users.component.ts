@@ -22,7 +22,7 @@ export class UsersComponent implements OnInit, AfterViewChecked {
   file!: any
 
   avt_default = avatar_user_default
-  loading = true
+  loading!: boolean
   userDialog = false
   flag = false
   
@@ -94,6 +94,7 @@ export class UsersComponent implements OnInit, AfterViewChecked {
     this.userDialog = true
     this.form.patchValue(user)  
     this.image = user.avatar ? user.avatar: ''
+    this.file = null
   }
 
   // CLOSE DIALOG
@@ -127,6 +128,8 @@ export class UsersComponent implements OnInit, AfterViewChecked {
 
   // GET ALL USERS
   getUsers() {
+    this.loading = true
+
     this.userService.getUsers().pipe(delay(1000)).subscribe(({ users }) => {
       this.users = users
       this.usersTemp = users

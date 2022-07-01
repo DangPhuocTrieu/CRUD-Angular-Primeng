@@ -1,22 +1,26 @@
-<div class="header">
-    <a routerLink="/" class="header__logo">CRUD APP</a>
-    <ul class="header__menu">
-        <li class="header__item">
-            <a class="header__link">Home</a>
-        </li>
-        <li class="header__item">
-            <a class="header__link">Products</a>
-        </li>
-        <li class="header__item">
-            <a class="header__link">Blog</a>
-        </li>
-        <li class="header__item">
-            <a class="header__link">Contact</a>
-        </li>
-    </ul>
-    <div class="header__actions">
-        <ion-icon name="search"></ion-icon>
-        <ion-icon name="heart"></ion-icon>
-        <ion-icon name="person"></ion-icon>
+<p-toolbar styleClass="bg-primary">
+    <div class="p-toolbar-group-left">
+        <h3>CRUD USERS</h3>
     </div>
-</div>
+
+    <ul class="flex align-items-center gap-2">
+       <li>
+           <p-button>Home</p-button>
+       </li>
+       <li>
+            <p-button>Products</p-button>
+       </li>
+       <li>
+            <p-button>Blogs</p-button>   
+       </li>
+       <li>
+            <p-button>Contact</p-button>
+       </li>
+    </ul>
+    
+    <div class="p-toolbar-group-right">
+        <p-button icon="pi pi-search" styleClass="p-button-text text-white"></p-button>
+        <p-button icon="pi pi-heart" styleClass="p-button-text text-white"></p-button>
+        <p-button icon="pi pi-user" styleClass="p-button-text text-white"></p-button>
+    </div>
+</p-toolbar>

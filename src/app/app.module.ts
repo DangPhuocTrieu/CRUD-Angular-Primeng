@@ -12,8 +12,10 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RippleModule } from 'primeng/ripple';
+import { SidebarModule } from 'primeng/sidebar';
 import { StyleClassModule } from 'primeng/styleclass';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
@@ -30,7 +32,7 @@ import { UsersComponent } from './component/users/users.component';
     AppComponent,
     HeaderComponent,
     MenuComponent,
-    UsersComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,9 @@ import { UsersComponent } from './component/users/users.component';
     InputNumberModule,
     DropdownModule,
     ConfirmDialogModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    RippleModule,
+    SidebarModule
   ],
   providers: [MessageService, ConfirmationService],
   bootstrap: [AppComponent]
