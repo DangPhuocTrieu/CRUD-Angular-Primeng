@@ -1,7 +1,8 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { concatMap, delay, from, mergeMap, Observer } from 'rxjs';
+import { DataServer } from 'src/app/models/data';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
 import { avatar_user_default } from '../../constants';
@@ -25,13 +26,15 @@ export class UsersComponent implements OnInit, AfterViewChecked {
   loading!: boolean
   userDialog = false
   flag = false
-  
+
   observer: Observer<any> = {
-    next: (data: any) => {
+    next: (data: DataServer) => {
       if(data.status === 'CREATE') {
         this.userService.displayMessage('Successfully', 'User created')
       }
       else if(data.status === 'UPDATE') {
+        console.log(data);
+        
         this.flag = false
         this.userService.displayMessage('Successfully', 'User updated')
       }
@@ -63,7 +66,6 @@ export class UsersComponent implements OnInit, AfterViewChecked {
 
   constructor(private userService: UserService,
     private fb: FormBuilder,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private cd: ChangeDetectorRef
     ) {}
@@ -99,7 +101,6 @@ export class UsersComponent implements OnInit, AfterViewChecked {
 
   // CLOSE DIALOG
   hideDialog() {
-    this.form.untouched
     this.userDialog = false
   }
 
@@ -129,11 +130,10 @@ export class UsersComponent implements OnInit, AfterViewChecked {
   // GET ALL USERS
   getUsers() {
     this.loading = true
-
-    this.userService.getUsers().pipe(delay(1000)).subscribe(({ users }) => {
-      this.users = users
-      this.usersTemp = users
+    this.userService.getUsers().pipe(delay(1000)).subscribe(({ data }) => {
       this.loading = false
+      this.users = data
+      this.usersTemp = data
     }) 
   }
 
@@ -163,9 +163,8 @@ export class UsersComponent implements OnInit, AfterViewChecked {
     // CREATE USER
     else {
        if(this.file) {
-        console.log(this.file);
         const formData = this.createFormData(this.file)
-
+ 
          this.userService.uploadImage(formData).pipe(concatMap(file => (
           this.userService.addUser({
             ...form.value,

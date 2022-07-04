@@ -32,7 +32,7 @@ import { UsersComponent } from './component/users/users.component';
     AppComponent,
     HeaderComponent,
     MenuComponent,
-    UsersComponent
+    UsersComponent,
   ],
   imports: [
     BrowserModule,
